@@ -7,6 +7,16 @@
 #include "mmu.h"
 #include "proc.h"
 
+int sys_getyear(void)
+{
+  return 2023;
+}
+
+int sys_getmysize(void)
+{
+  return myproc()->sz;
+}
+
 int
 sys_fork(void)
 {
@@ -88,4 +98,32 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+int sys_getkernelstartaddr(void)
+{
+  return KERNBASE;
+}
+int sys_getkernelendaddr(void)
+{
+  return KERNBASE + PHYSTOP;
+}
+int a = 10;
+int *sys_getkernelvariaddr(void)
+{
+  return &a;
+}
+int *sys_getsystemcalladdr(void)
+{
+  return (int *)sys_fork;
+}
+
+int sys_setpriority(void)
+{
+  int prio;
+
+  argint(0, &prio);
+
+  myproc()->myPriority = prio;
+  return myproc()->myPriority;
 }
